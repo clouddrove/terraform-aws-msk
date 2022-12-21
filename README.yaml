@@ -1,0 +1,68 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+
+# Name of this project
+name: Terraform AWS kafka
+
+# License of this project
+license: "APACHE"
+
+# Canonical GitHub repo
+github_repo: clouddrove/terraform-aws-kafka
+
+# Badges to display
+badges:
+  - name: "Terraform"
+    image: "https://img.shields.io/badge/Terraform-v1.1.7-green"
+    url: "https://www.terraform.io"
+  - name: "Licence"
+    image: "https://img.shields.io/badge/License-APACHE-blue.svg"
+    url: "LICENSE.md"
+  - name: "tfsec"
+    image: "https://github.com/clouddrove/terraform-aws-kafka/actions/workflows/tfsec.yml/badge.svg"
+    url: "https://github.com/clouddrove/terraform-aws-kafka/actions/workflows/tfsec.yml"
+  - name: "static-checks"
+    image: "https://github.com/clouddrove/terraform-aws-kafka/actions/workflows/terraform.yml/badge.svg"
+    url: "https://github.com/clouddrove/terraform-aws-kafka/actions/workflows/terraform.yml"
+
+
+#  description of this project
+description: |-
+  Terraform module to create kafka resource on AWS.
+
+# extra content
+include:
+  - "terraform.md"
+
+# How to use this project
+# yamllint disable rule:line-length
+usage: |-
+  ### Simple Example
+  Here is an example of how you can use this module in your inventory structure:
+    ```hcl
+    module "kafka" {
+       source      = "clouddrove/kafka/aws"
+       version     = "1.0.0"
+
+       name        = "kafka"
+       environment = "test"
+       label_order = ["name", "environment"]
+
+       kafka_version          = "2.7.1"
+       kafka_broker_number    = 3
+
+       broker_node_client_subnets  = module.subnets.private_subnet_id
+       broker_node_ebs_volume_size = 20
+       broker_node_instance_type   = "kafka.t3.small"
+       broker_node_security_groups = [module.ssh.security_group_ids]
+
+       configuration_server_properties = {
+       "auto.create.topics.enable" = true
+       "delete.topic.enable"       = true
+      }
+    }
+   ```
