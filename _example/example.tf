@@ -108,7 +108,7 @@ data "aws_iam_policy_document" "kms" {
 }
 
 module "secrets_manager" {
-  source = "git::https://github.com/clouddrove/terraform-aws-secrets-manager.git?ref=tags/1.0.1"
+  source = "git::https://github.com/clouddrove/terraform-aws-secrets-manager.git"
 
   name        = "secrets-manager"
   environment = "test"
