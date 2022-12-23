@@ -19,8 +19,8 @@
 <a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License-APACHE-blue.svg" alt="Licence">
 </a>
-<a href="https://github.com/clouddrove/terraform-gcp-kafka/actions/workflows/tfsec.yml">
-  <img src="https://github.com/clouddrove/terraform-gcp-kafka/actions/workflows/tfsec.yml/badge.svg" alt="tfsec">
+<a href="https://github.com/clouddrove/terraform-aws-kafka/actions/workflows/tfsec.yml">
+  <img src="https://github.com/clouddrove/terraform-aws-kafka/actions/workflows/tfsec.yml/badge.svg" alt="tfsec">
 </a>
 <a href="https://github.com/clouddrove/terraform-aws-kafka/actions/workflows/terraform.yml">
   <img src="https://github.com/clouddrove/terraform-aws-kafka/actions/workflows/terraform.yml/badge.svg" alt="static-checks">
