@@ -16,7 +16,7 @@ jobs:
         with:
           sarif_file: tfsec.sarif
           working_directory: _example
-          full_repo_scan: true
+          full_repo_scan: false
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
