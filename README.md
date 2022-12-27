@@ -76,10 +76,9 @@ This module has a few dependencies:
 
 ### Simple Example
 Here is an example of how you can use this module in your inventory structure:
-  ```hcl
+```hcl
   module "kafka" {
      source      = "clouddrove/kafka/aws"
-     version     = "1.0.0"
 
      name        = "kafka"
      environment = "test"
@@ -98,7 +97,7 @@ Here is an example of how you can use this module in your inventory structure:
      "delete.topic.enable"       = true
     }
   }
- ```
+```
 
 
 
