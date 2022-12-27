@@ -29,7 +29,6 @@ badges:
     image: "https://github.com/clouddrove/terraform-aws-kafka/actions/workflows/terraform.yml/badge.svg"
     url: "https://github.com/clouddrove/terraform-aws-kafka/actions/workflows/terraform.yml"
 
-
 #  description of this project
 description: |-
   Terraform module to create kafka resource on AWS.
@@ -43,10 +42,9 @@ include:
 usage: |-
   ### Simple Example
   Here is an example of how you can use this module in your inventory structure:
-    ```hcl
+  ```hcl
     module "kafka" {
        source      = "clouddrove/kafka/aws"
-       version     = "1.0.0"
 
        name        = "kafka"
        environment = "test"
@@ -65,4 +63,4 @@ usage: |-
        "delete.topic.enable"       = true
       }
     }
-   ```
+  ```
