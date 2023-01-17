@@ -4,7 +4,7 @@ provider "aws" {
 
 module "vpc" {
   source  = "clouddrove/vpc/aws"
-  version = "0.15.1"
+  version = "1.3.0"
 
   name        = "vpc"
   environment = "test"
@@ -22,7 +22,7 @@ module "vpc" {
 
 module "subnets" {
   source  = "clouddrove/subnet/aws"
-  version = "1.0.1"
+  version = "1.3.0"
 
   nat_gateway_enabled = true
   single_nat_gateway  = true
@@ -43,7 +43,7 @@ module "subnets" {
 
 module "http-https" {
   source      = "clouddrove/security-group/aws"
-  version     = "1.0.1"
+  version     = "1.3.0"
   name        = "http-https"
   environment = "test"
   label_order = ["name", "environment"]
@@ -55,7 +55,7 @@ module "http-https" {
 
 module "ssh" {
   source      = "clouddrove/security-group/aws"
-  version     = "1.0.1"
+  version     = "1.3.0"
   name        = "ssh"
   environment = "test"
   label_order = ["name", "environment"]
@@ -80,7 +80,7 @@ module "s3_bucket" {
 
 module "kms_key" {
   source                  = "clouddrove/kms/aws"
-  version                 = "1.0.1"
+  version                 = "1.3.0"
   name                    = "kms"
   environment             = "test"
   label_order             = ["environment", "name"]
@@ -108,8 +108,8 @@ data "aws_iam_policy_document" "kms" {
 }
 
 module "secrets_manager" {
-  source = "git::https://github.com/clouddrove/terraform-aws-secrets-manager.git?ref=tags/1.0.1"
-
+  source                  = "clouddrove/secrets-manager/aws"
+  version                 = "1.3.0"
   name        = "secrets-manager"
   environment = "test"
   label_order = ["name", "environment"]
@@ -140,7 +140,7 @@ module "kafka" {
   broker_node_security_groups = [module.ssh.security_group_ids, module.http-https.security_group_ids]
 
   encryption_in_transit_client_broker = "TLS"
-  encryption_in_transit_in_cluster    = false
+  encryption_in_transit_in_cluster    = true
 
   configuration_server_properties = {
     "auto.create.topics.enable" = true
@@ -159,7 +159,7 @@ module "kafka" {
 
   client_authentication_sasl_scram         = false
   create_scram_secret_association          = false
-  scram_secret_association_secret_arn_list = module.secrets_manager.secret_arns
+  scram_secret_association_secret_arn_list = [module.secrets_manager.secret_arns]
 
   schema_registries = {
     team_a = {
