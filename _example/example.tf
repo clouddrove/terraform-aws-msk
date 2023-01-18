@@ -116,7 +116,7 @@ module "secrets_manager" {
 
   secrets = [
     {
-      name                    = "AmazonMSK_1"
+      name                    = "AmazonMSK_11"
       description             = "My secret 1"
       recovery_window_in_days = 7
       secret_string           = "This is an example"
