@@ -192,7 +192,7 @@ variable "create_scram_secret_association" {
 
 variable "scram_secret_association_secret_arn_list" {
   type        = list(string)
-  default     = []
+  default     = [""]
   description = "List of AWS Secrets Manager secret ARNs to associate with SCRAM"
 }
 
