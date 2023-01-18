@@ -67,7 +67,7 @@ module "ssh" {
 
 module "s3_bucket" {
   source  = "clouddrove/s3/aws"
-  version = "0.15.2"
+  version = "1.3.0"
 
   name        = "clouddrove-secure-bucket"
   environment = "test"
@@ -116,7 +116,7 @@ module "secrets_manager" {
 
   secrets = [
     {
-      name                    = "AmazonMSK_1"
+      name                    = "AmazonMSK_11"
       description             = "My secret 1"
       recovery_window_in_days = 7
       secret_string           = "This is an example"
