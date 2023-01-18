@@ -147,7 +147,7 @@ Here is an example of how you can use this module in your inventory structure:
 | scaling\_target\_value | The Kafka broker storage utilization at which scaling is initiated | `number` | `70` | no |
 | schema\_registries | A map of schema registries to be created | `map(any)` | `{}` | no |
 | schemas | A map schemas to be created within the schema registry | `map(any)` | `{}` | no |
-| scram\_secret\_association\_secret\_arn\_list | List of AWS Secrets Manager secret ARNs to associate with SCRAM | `list(string)` | `[]` | no |
+| scram\_secret\_association\_secret\_arn\_list | List of AWS Secrets Manager secret ARNs to associate with SCRAM | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
 | timeouts | Create, update, and delete timeout configurations for the cluster | `map(string)` | `{}` | no |
 
 ## Outputs
