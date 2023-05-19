@@ -119,7 +119,8 @@ module "secrets_manager" {
       name                    = "AmazonMSK_1"
       description             = "My secret 1"
       recovery_window_in_days = 7
-      secret_string           = "This is an example"
+      kms_key                 = module.kms_key.key_id
+      secret_string           = "{ \"username\": \"test-user\", \"password\": \"test-password\" }"
     }
   ]
 }
