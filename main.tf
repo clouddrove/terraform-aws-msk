@@ -21,9 +21,13 @@ resource "aws_msk_cluster" "msk-cluster" {
 
   broker_node_group_info {
     client_subnets  = var.broker_node_client_subnets
-    ebs_volume_size = var.broker_node_ebs_volume_size
     instance_type   = var.broker_node_instance_type
     security_groups = var.broker_node_security_groups
+    storage_info {
+      ebs_storage_info {
+        volume_size = var.broker_node_ebs_volume_size
+      }
+    }
   }
 
   dynamic "client_authentication" {
@@ -99,11 +103,6 @@ resource "aws_msk_cluster" "msk-cluster" {
     create = lookup(var.timeouts, "create", null)
     update = lookup(var.timeouts, "update", null)
     delete = lookup(var.timeouts, "delete", null)
-  }
-
-  # required for appautoscaling
-  lifecycle {
-    ignore_changes = [broker_node_group_info[0].ebs_volume_size]
   }
 
   tags = module.labels.tags

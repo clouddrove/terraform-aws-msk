@@ -4,7 +4,7 @@ provider "aws" {
 
 module "vpc" {
   source  = "clouddrove/vpc/aws"
-  version = "1.3.0"
+  version = "1.3.1"
 
   name        = "vpc"
   environment = "test"
@@ -108,8 +108,8 @@ data "aws_iam_policy_document" "kms" {
 }
 
 module "secrets_manager" {
-  source                  = "clouddrove/secrets-manager/aws"
-  version                 = "1.3.0"
+  source      = "clouddrove/secrets-manager/aws"
+  version     = "1.3.0"
   name        = "secrets-manager"
   environment = "test"
   label_order = ["name", "environment"]
