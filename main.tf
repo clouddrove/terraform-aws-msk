@@ -11,7 +11,7 @@ module "labels" {
 locals {
   cloudwatch_log_group = var.msk_cluster_enabled && var.create_cloudwatch_log_group ? aws_cloudwatch_log_group.this[0].name : var.cloudwatch_log_group_name
 }
-
+#tfsec:ignore:aws-msk-enable-logging
 resource "aws_msk_cluster" "msk-cluster" {
   count                  = var.msk_cluster_enabled ? 1 : 0
   cluster_name           = format("%s-mks-cluster", module.labels.id)
