@@ -6,11 +6,9 @@ module "vpc" {
   source  = "clouddrove/vpc/aws"
   version = "2.0.0"
 
-  name        = "vpc"
-  environment = "test"
-  label_order = ["name", "environment"]
-
-  vpc_enabled                               = true
+  name                                      = "vpc"
+  environment                               = "test"
+  label_order                               = ["name", "environment"]
   cidr_block                                = "10.0.0.0/16"
   enable_flow_log                           = false
   additional_cidr_block                     = ["172.3.0.0/16", "172.2.0.0/16"]
