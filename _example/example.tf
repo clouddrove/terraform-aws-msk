@@ -4,13 +4,11 @@ provider "aws" {
 
 module "vpc" {
   source  = "clouddrove/vpc/aws"
-  version = "1.3.1"
+  version = "2.0.0"
 
-  name        = "vpc"
-  environment = "test"
-  label_order = ["name", "environment"]
-
-  vpc_enabled                               = true
+  name                                      = "vpc"
+  environment                               = "test"
+  label_order                               = ["name", "environment"]
   cidr_block                                = "10.0.0.0/16"
   enable_flow_log                           = false
   additional_cidr_block                     = ["172.3.0.0/16", "172.2.0.0/16"]
@@ -43,7 +41,7 @@ module "subnets" {
 
 module "http-https" {
   source      = "clouddrove/security-group/aws"
-  version     = "1.3.0"
+  version     = "2.0.0"
   name        = "http-https"
   environment = "test"
   label_order = ["name", "environment"]
@@ -55,7 +53,7 @@ module "http-https" {
 
 module "ssh" {
   source      = "clouddrove/security-group/aws"
-  version     = "1.3.0"
+  version     = "2.0.0"
   name        = "ssh"
   environment = "test"
   label_order = ["name", "environment"]
