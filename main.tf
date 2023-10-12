@@ -58,8 +58,8 @@ resource "aws_msk_cluster" "msk-cluster" {
   }
 
   configuration_info {
-    arn      = join("", aws_msk_configuration.this.*.arn)
-    revision = join("", aws_msk_configuration.this.*.latest_revision)
+    arn      = join("", aws_msk_configuration.this[*].arn)
+    revision = join("", aws_msk_configuration.this[*].latest_revision)
   }
 
   encryption_info {
