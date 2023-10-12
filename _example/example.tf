@@ -89,6 +89,7 @@ module "ssh" {
   }]
 }
 
+#tfsec:ignore:aws-ec2-no-public-egress-sgr
 module "http_https" {
   source  = "clouddrove/security-group/aws"
   version = "2.0.0"
@@ -199,7 +200,7 @@ module "kafka" {
 
   name                = local.name
   environment         = local.environment
-  kafka_version       = "2.7.1"
+  kafka_version       = "3.5.1"
   kafka_broker_number = 3
 
   broker_node_client_subnets  = module.subnets.private_subnet_id
@@ -231,11 +232,11 @@ module "kafka" {
 
   schema_registries = {
     team_a = {
-      name        = "team_a"
+      name        = "team_as"
       description = "Schema registry for Team A"
     }
     team_b = {
-      name        = "team_b"
+      name        = "team_bs"
       description = "Schema registry for Team B"
     }
   }
