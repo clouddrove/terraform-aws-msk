@@ -232,11 +232,11 @@ module "kafka" {
 
   schema_registries = {
     team_a = {
-      name        = "team_as"
+      name        = "team_a"
       description = "Schema registry for Team A"
     }
     team_b = {
-      name        = "team_bs"
+      name        = "team_b"
       description = "Schema registry for Team B"
     }
   }
