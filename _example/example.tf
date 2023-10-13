@@ -1,14 +1,21 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = local.region
+}
+
+locals {
+  region                = "eu-west-1"
+  name                  = "msk"
+  environment           = "test"
+  vpc_cidr_block        = module.vpc.vpc_cidr_block
+  additional_cidr_block = "172.16.0.0/16"
 }
 
 module "vpc" {
   source  = "clouddrove/vpc/aws"
   version = "2.0.0"
 
-  name                                      = "vpc"
-  environment                               = "test"
-  label_order                               = ["name", "environment"]
+  name                                      = "${local.name}-vpc"
+  environment                               = local.environment
   cidr_block                                = "10.0.0.0/16"
   enable_flow_log                           = false
   additional_cidr_block                     = ["172.3.0.0/16", "172.2.0.0/16"]
@@ -20,68 +27,134 @@ module "vpc" {
 
 module "subnets" {
   source  = "clouddrove/subnet/aws"
-  version = "1.3.0"
+  version = "2.0.0"
 
+  name                = "${local.name}-subnet"
+  environment         = local.environment
   nat_gateway_enabled = true
   single_nat_gateway  = true
-
-  name        = "subnets"
-  environment = "test"
-  label_order = ["name", "environment"]
-
-  availability_zones              = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  vpc_id                          = module.vpc.vpc_id
-  type                            = "public-private"
-  igw_id                          = module.vpc.igw_id
-  cidr_block                      = module.vpc.vpc_cidr_block
-  ipv6_cidr_block                 = module.vpc.ipv6_cidr_block
-  assign_ipv6_address_on_creation = false
-
+  availability_zones  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  vpc_id              = module.vpc.vpc_id
+  type                = "public-private"
+  igw_id              = module.vpc.igw_id
+  cidr_block          = module.vpc.vpc_cidr_block
+  ipv6_cidr_block     = module.vpc.ipv6_cidr_block
 }
 
-module "http-https" {
-  source      = "clouddrove/security-group/aws"
-  version     = "2.0.0"
-  name        = "http-https"
-  environment = "test"
-  label_order = ["name", "environment"]
-
-  vpc_id        = module.vpc.vpc_id
-  allowed_ip    = ["0.0.0.0/0"]
-  allowed_ports = [80, 443]
-}
+# ################################################################################
+# Security Groups module call
+################################################################################
 
 module "ssh" {
-  source      = "clouddrove/security-group/aws"
-  version     = "2.0.0"
-  name        = "ssh"
-  environment = "test"
-  label_order = ["name", "environment"]
+  source  = "clouddrove/security-group/aws"
+  version = "2.0.0"
 
-  vpc_id        = module.vpc.vpc_id
-  allowed_ip    = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
-  allowed_ports = [22]
+  name        = "${local.name}-ssh"
+  environment = local.environment
+  vpc_id      = module.vpc.vpc_id
+  new_sg_ingress_rules_with_cidr_blocks = [{
+    rule_count  = 1
+    from_port   = 22
+    protocol    = "tcp"
+    to_port     = 22
+    cidr_blocks = [local.vpc_cidr_block, local.additional_cidr_block]
+    description = "Allow ssh traffic."
+    },
+    {
+      rule_count  = 2
+      from_port   = 27017
+      protocol    = "tcp"
+      to_port     = 27017
+      cidr_blocks = [local.additional_cidr_block]
+      description = "Allow Mongodb traffic."
+    }
+  ]
+
+  ## EGRESS Rules
+  new_sg_egress_rules_with_cidr_blocks = [{
+    rule_count  = 1
+    from_port   = 22
+    protocol    = "tcp"
+    to_port     = 22
+    cidr_blocks = [local.vpc_cidr_block, local.additional_cidr_block]
+    description = "Allow ssh outbound traffic."
+    },
+    {
+      rule_count  = 2
+      from_port   = 27017
+      protocol    = "tcp"
+      to_port     = 27017
+      cidr_blocks = [local.additional_cidr_block]
+      description = "Allow Mongodb outbound traffic."
+  }]
+}
+
+#tfsec:ignore:aws-ec2-no-public-egress-sgr
+module "http_https" {
+  source  = "clouddrove/security-group/aws"
+  version = "2.0.0"
+
+  name        = "${local.name}-http-https"
+  environment = local.environment
+
+  vpc_id = module.vpc.vpc_id
+  ## INGRESS Rules
+  new_sg_ingress_rules_with_cidr_blocks = [{
+    rule_count  = 1
+    from_port   = 22
+    protocol    = "tcp"
+    to_port     = 22
+    cidr_blocks = [local.vpc_cidr_block]
+    description = "Allow ssh traffic."
+    },
+    {
+      rule_count  = 2
+      from_port   = 80
+      protocol    = "tcp"
+      to_port     = 80
+      cidr_blocks = [local.vpc_cidr_block]
+      description = "Allow http traffic."
+    },
+    {
+      rule_count  = 3
+      from_port   = 443
+      protocol    = "tcp"
+      to_port     = 443
+      cidr_blocks = [local.vpc_cidr_block]
+      description = "Allow https traffic."
+    }
+  ]
+
+  ## EGRESS Rules
+  new_sg_egress_rules_with_cidr_blocks = [{
+    rule_count       = 1
+    from_port        = 0
+    protocol         = "-1"
+    to_port          = 0
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+    description      = "Allow all traffic."
+    }
+  ]
 }
 
 module "s3_bucket" {
   source  = "clouddrove/s3/aws"
   version = "1.3.0"
 
-  name        = "clouddrove-secure-bucket"
-  environment = "test"
+  name        = "${local.name}-s3-bucket"
+  environment = local.environment
   attributes  = ["private"]
-  label_order = ["name", "environment"]
-
-  versioning = true
-  acl        = "private"
+  versioning  = true
+  acl         = "private"
 }
 
 module "kms_key" {
-  source                  = "clouddrove/kms/aws"
-  version                 = "1.3.0"
-  name                    = "kms"
-  environment             = "test"
-  label_order             = ["environment", "name"]
+  source  = "clouddrove/kms/aws"
+  version = "1.3.0"
+
+  name                    = "${local.name}-kms"
+  environment             = local.environment
   enabled                 = true
   description             = "KMS key for kafka"
   deletion_window_in_days = 7
@@ -106,12 +179,11 @@ data "aws_iam_policy_document" "kms" {
 }
 
 module "secrets_manager" {
-  source      = "clouddrove/secrets-manager/aws"
-  version     = "1.3.0"
-  name        = "secrets-manager"
-  environment = "test"
-  label_order = ["name", "environment"]
+  source  = "clouddrove/secrets-manager/aws"
+  version = "1.3.0"
 
+  name        = "${local.name}-secrets-manager"
+  environment = local.environment
   secrets = [
     {
       name                    = "AmazonMSK_1"
@@ -126,17 +198,15 @@ module "secrets_manager" {
 module "kafka" {
   source = ".././"
 
-  name        = "kafka"
-  environment = "test"
-  label_order = ["name", "environment"]
-
-  kafka_version       = "2.7.1"
+  name                = local.name
+  environment         = local.environment
+  kafka_version       = "3.5.1"
   kafka_broker_number = 3
 
   broker_node_client_subnets  = module.subnets.private_subnet_id
   broker_node_ebs_volume_size = 20
   broker_node_instance_type   = "kafka.t3.small"
-  broker_node_security_groups = [module.ssh.security_group_ids, module.http-https.security_group_ids]
+  broker_node_security_groups = [module.ssh.security_group_id, module.http_https.security_group_id]
 
   encryption_in_transit_client_broker = "TLS"
   encryption_in_transit_in_cluster    = true
