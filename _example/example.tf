@@ -128,7 +128,6 @@ module "s3_bucket" {
 
   name        = "${local.name}-s3-bucket"
   environment = local.environment
-  attributes  = ["private"]
   versioning  = true
   acl         = "private"
 }
