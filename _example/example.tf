@@ -59,14 +59,6 @@ module "ssh" {
     to_port     = 22
     cidr_blocks = [local.vpc_cidr_block, local.additional_cidr_block]
     description = "Allow ssh traffic."
-    },
-    {
-      rule_count  = 2
-      from_port   = 27017
-      protocol    = "tcp"
-      to_port     = 27017
-      cidr_blocks = [local.additional_cidr_block]
-      description = "Allow Mongodb traffic."
     }
   ]
 
@@ -78,14 +70,6 @@ module "ssh" {
     to_port     = 22
     cidr_blocks = [local.vpc_cidr_block, local.additional_cidr_block]
     description = "Allow ssh outbound traffic."
-    },
-    {
-      rule_count  = 2
-      from_port   = 27017
-      protocol    = "tcp"
-      to_port     = 27017
-      cidr_blocks = [local.additional_cidr_block]
-      description = "Allow Mongodb outbound traffic."
   }]
 }
 
@@ -140,18 +124,17 @@ module "http_https" {
 
 module "s3_bucket" {
   source  = "clouddrove/s3/aws"
-  version = "1.3.0"
+  version = "2.0.0"
 
   name        = "${local.name}-s3-bucket"
   environment = local.environment
-  attributes  = ["private"]
   versioning  = true
   acl         = "private"
 }
 
 module "kms_key" {
   source  = "clouddrove/kms/aws"
-  version = "1.3.0"
+  version = "1.3.1"
 
   name                    = "${local.name}-kms"
   environment             = local.environment
@@ -180,7 +163,7 @@ data "aws_iam_policy_document" "kms" {
 
 module "secrets_manager" {
   source  = "clouddrove/secrets-manager/aws"
-  version = "1.3.0"
+  version = "2.0.0"
 
   name        = "${local.name}-secrets-manager"
   environment = local.environment
