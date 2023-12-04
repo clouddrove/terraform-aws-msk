@@ -22,7 +22,7 @@ jobs:
       - id: automerge
         name: automerge
         uses: pascalgn/automerge-action@v0.15.6
-        if: github.event_name == 'pull_request' && github.event.action == 'synchronize' && github.event.pull_request.draft == false && success()
+        if: github.event_name == 'pull_request_target' && github.event.action == 'synchronize' && github.event.pull_request.draft == false && success()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MERGE_FILTER_AUTHOR: 'dependabot[bot]'
