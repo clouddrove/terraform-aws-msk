@@ -28,5 +28,5 @@ jobs:
           MERGE_FILTER_AUTHOR: 'dependabot[bot]'
           MERGE_METHOD: "merge"
           MERGE_DELETE_BRANCH: "true"
-          MERGE_LABELS: "dependencies,automerge"
+          MERGE_LABELS: "dependencies,automerge,github_actions"
           MERGE_REQUIRED_APPROVALS: ""
