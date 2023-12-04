@@ -1,4 +1,4 @@
-name: Auto approve and merge PRs by dependabot
+name: Auto approve and merge PRs by dependabots
 on:
   pull_request:
     types:
