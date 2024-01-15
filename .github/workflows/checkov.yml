@@ -1,5 +1,4 @@
 ---
-#checkov:skip:CKV2_GHA_1
 name: checkov
 on:
   pull_request:
@@ -9,4 +8,5 @@ jobs:
     with:
       directory: '.'
       continue_on_error: true
+      skip-check: CKV2_GHA_1
 ...
