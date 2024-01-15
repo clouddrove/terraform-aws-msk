@@ -3,7 +3,7 @@ name: checkov
 # Controls when the workflow will run
 on:
   # Triggers the workflow on worflow call request events.
-  workflow_call:
+  pull_request:
     inputs:
       directory:
         required: true
