@@ -23,4 +23,15 @@ jobs:
           output_file_path: console
           skip_path: "./"
         continue-on-error: true
+      - name: Upload SARIF file
+          uses: github/codeql-action/upload-sarif@v3
+          # Results are generated only on a success or failure
+          # This is required since GitHub by default won't run the next step
+          # when the previous one has failed. Security checks that do not pass will 'fail'
+          # An alternative is to add `continue-on-error: true` to the previous step
+          # Or 'soft_fail: true' to checkov
+          if: success() || failure()
+          with:
+            sarif_file: results.sarif
+      ...
 ...
