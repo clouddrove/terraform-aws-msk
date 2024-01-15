@@ -64,5 +64,5 @@ jobs:
         if: success() || failure()
         with:
           sarif_file: results.sarif
-        continue_on_error: true
+         continue_on_error: true
 ...
