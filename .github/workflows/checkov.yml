@@ -1,11 +1,29 @@
 ---
-name: checkov
+name: Checkov
 on:
   pull_request:
+    branches:
+      - "main"
+
+permissions: read-all
+
 jobs:
-  checkov:
-    uses: clouddrove/github-shared-workflows/.github/workflows/checkov.yml@1.0.10
-    with:
-      directory: '.'
-      continue_on_error: true
+  checkov-job:
+    runs-on: ubuntu-latest
+    name: checkov-action
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Run Checkov action
+        id: checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        if: success() || failure()
+        with:
+          sarif_file: results.sarif
 ...
