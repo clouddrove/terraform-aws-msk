@@ -63,5 +63,5 @@ jobs:
         # Or 'soft_fail: true' to checkov
         if: success() || failure()
         with:
-          continue-on-error: true
+          sarif_file: results.sarif
 ...
