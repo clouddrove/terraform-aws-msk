@@ -53,4 +53,3 @@
 | configuration\_latest\_revision | Latest revision of the configuration |
 | current\_version | Current version of the MSK Cluster used for updates, e.g. `K13V1IB3VIYZZH` |
 | scram\_secret\_association\_id | Amazon Resource Name (ARN) of the MSK cluster |
-

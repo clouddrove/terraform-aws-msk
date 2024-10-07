@@ -22,4 +22,3 @@ output "scram_secret_association_id" {
   value       = try(aws_msk_scram_secret_association.this[0].id, "")
   description = "Amazon Resource Name (ARN) of the MSK cluster"
 }
-
