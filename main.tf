@@ -14,7 +14,7 @@ locals {
 #tfsec:ignore:aws-msk-enable-logging
 resource "aws_msk_cluster" "msk-cluster" {
   count                  = var.msk_cluster_enabled ? 1 : 0
-  cluster_name           = format("%s-mks-cluster", module.labels.id)
+  cluster_name           = module.labels.id
   kafka_version          = var.kafka_version
   number_of_broker_nodes = var.kafka_broker_number
   enhanced_monitoring    = var.enhanced_monitoring
