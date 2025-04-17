@@ -31,31 +31,29 @@ resource "aws_msk_cluster" "msk-cluster" {
   }
 
   dynamic "client_authentication" {
-    for_each = length(var.client_authentication_tls_certificate_authority_arns) > 0 || var.client_authentication_sasl_scram || var.client_authentication_sasl_iam ? [1] : []
+    for_each = [
+      for v in [
+        var.client_authentication_tls_certificate_authority_arns,
+        var.client_authentication_sasl_scram,
+        var.client_authentication_sasl_iam,
+        var.client_authentication_unauthenticated
+      ] : v
+    ] != [] ? [1] : []
 
     content {
-      dynamic "tls" {
-        for_each = length(var.client_authentication_tls_certificate_authority_arns) > 0 ? [1] : []
-        content {
-          certificate_authority_arns = var.client_authentication_tls_certificate_authority_arns
-        }
+      tls {
+        certificate_authority_arns = var.client_authentication_tls_certificate_authority_arns
       }
 
-      dynamic "sasl" {
-        for_each = var.client_authentication_sasl_iam ? [1] : []
-        content {
-          iam = var.client_authentication_sasl_iam
-        }
+      sasl {
+        iam   = var.client_authentication_sasl_iam != null ? var.client_authentication_sasl_iam : false
+        scram = var.client_authentication_sasl_scram != null ? var.client_authentication_sasl_scram : false
       }
 
-      dynamic "sasl" {
-        for_each = var.client_authentication_sasl_scram ? [1] : []
-        content {
-          scram = var.client_authentication_sasl_scram
-        }
-      }
+      unauthenticated = var.client_authentication_unauthenticated != null ? var.client_authentication_unauthenticated : false
     }
   }
+
 
   configuration_info {
     arn      = join("", aws_msk_configuration.this[*].arn)
