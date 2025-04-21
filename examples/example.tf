@@ -122,6 +122,54 @@ module "http_https" {
   ]
 }
 
+module "kafka_sg" {
+  source  = "clouddrove/security-group/aws"
+  version = "2.0.0"
+
+  name        = "${local.name}-kafka"
+  environment = local.environment
+  vpc_id      = module.vpc.vpc_id
+
+  new_sg_ingress_rules_with_cidr_blocks = [
+    {
+      rule_count  = 1
+      from_port   = 9092
+      protocol    = "tcp"
+      to_port     = 9092
+      cidr_blocks = [local.vpc_cidr_block]
+      description = "Allow Kafka plaintext on port 9092"
+    },
+    {
+      rule_count  = 2
+      from_port   = 9094
+      protocol    = "tcp"
+      to_port     = 9094
+      cidr_blocks = [local.vpc_cidr_block]
+      description = "Allow Kafka TLS on port 9094"
+    }
+  ]
+
+  new_sg_egress_rules_with_cidr_blocks = [
+    {
+      rule_count  = 1
+      from_port   = 9092
+      protocol    = "tcp"
+      to_port     = 9092
+      cidr_blocks = [local.vpc_cidr_block]
+      description = "Egress for Kafka on port 9092"
+    },
+    {
+      rule_count  = 2
+      from_port   = 9094
+      protocol    = "tcp"
+      to_port     = 9094
+      cidr_blocks = [local.vpc_cidr_block]
+      description = "Egress for Kafka on port 9094"
+    }
+  ]
+}
+
+
 module "s3_bucket" {
   source  = "clouddrove/s3/aws"
   version = "2.0.0"
@@ -189,7 +237,7 @@ module "kafka" {
   broker_node_client_subnets  = module.subnets.private_subnet_id
   broker_node_ebs_volume_size = 20
   broker_node_instance_type   = "kafka.t3.small"
-  broker_node_security_groups = [module.ssh.security_group_id, module.http_https.security_group_id]
+  broker_node_security_groups = [module.ssh.security_group_id, module.http_https.security_group_id, module.kafka_sg.security_group_id]
 
   encryption_in_transit_client_broker = "TLS"
   encryption_in_transit_in_cluster    = true
