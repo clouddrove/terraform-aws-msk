@@ -62,6 +62,13 @@ resource "aws_msk_cluster" "msk-cluster" {
     }
   }
 
+  # Ignore empty tls{} block to avoid unnecessary drifts from AWS-managed state
+  lifecycle {
+    ignore_changes = [
+      client_authentication[0].tls
+    ]
+  }
+
 
   configuration_info {
     arn      = join("", aws_msk_configuration.this[*].arn)
