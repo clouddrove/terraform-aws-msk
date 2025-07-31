@@ -61,6 +61,13 @@ resource "aws_msk_cluster" "msk-cluster" {
       unauthenticated = var.client_authentication_unauthenticated != null ? var.client_authentication_unauthenticated : false
     }
   }
+  
+  # Ignore empty tls{} block to avoid unnecessary drifts from AWS-managed state
+  lifecycle {
+    ignore_changes = [
+      client_authentication[0].tls
+    ]
+  }
 
 
   configuration_info {
