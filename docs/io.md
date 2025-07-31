@@ -9,6 +9,7 @@
 | client\_authentication\_sasl\_iam | Enables IAM client authentication | `bool` | `false` | no |
 | client\_authentication\_sasl\_scram | Enables SCRAM client authentication via AWS Secrets Manager | `bool` | `false` | no |
 | client\_authentication\_tls\_certificate\_authority\_arns | List of ACM Certificate Authority Amazon Resource Names (ARNs) | `list(string)` | `[]` | no |
+| client\_authentication\_unauthenticated | (Optional) Enables unauthenticated access. | `bool` | `false` | no |
 | cloudwatch\_log\_group\_kms\_key\_id | The ARN of the KMS Key to use when encrypting log data | `string` | `null` | no |
 | cloudwatch\_log\_group\_name | Name of the Cloudwatch Log Group to deliver logs to | `string` | `null` | no |
 | cloudwatch\_log\_group\_retention\_in\_days | Specifies the number of days you want to retain log events in the log group | `number` | `0` | no |
