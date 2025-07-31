@@ -31,18 +31,26 @@ resource "aws_msk_cluster" "msk-cluster" {
   }
 
   dynamic "client_authentication" {
-    for_each = [
-      for v in [
-        var.client_authentication_tls_certificate_authority_arns,
-        var.client_authentication_sasl_scram,
-        var.client_authentication_sasl_iam,
-        var.client_authentication_unauthenticated
-      ] : v
-    ] != [] ? [1] : []
+    for_each = (
+      (
+        var.client_authentication_tls_certificate_authority_arns != null &&
+        length(var.client_authentication_tls_certificate_authority_arns) > 0
+      ) ||
+      (var.client_authentication_sasl_scram != null) ||
+      (var.client_authentication_sasl_iam != null) ||
+      (var.client_authentication_unauthenticated != null)
+    ) ? [1] : []
 
     content {
-      tls {
-        certificate_authority_arns = var.client_authentication_tls_certificate_authority_arns
+      dynamic "tls" {
+        for_each = (
+          var.client_authentication_tls_certificate_authority_arns != null &&
+          length(var.client_authentication_tls_certificate_authority_arns) > 0
+        ) ? [1] : []
+
+        content {
+          certificate_authority_arns = var.client_authentication_tls_certificate_authority_arns
+        }
       }
 
       sasl {
