@@ -100,6 +100,12 @@ variable "client_authentication_sasl_iam" {
   description = "Enables IAM client authentication"
 }
 
+variable "client_authentication_unauthenticated" {
+  type        = bool
+  default     = false
+  description = "(Optional) Enables unauthenticated access."
+}
+
 variable "encryption_in_transit_client_broker" {
   type        = string
   default     = null
